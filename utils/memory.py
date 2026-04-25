@@ -9,7 +9,7 @@ import warnings
 from typing import List, Dict
 
 
-MEMORY_PATH = "memory.json"
+MEMORY_PATH = os.getenv("MEMORY_PATH", "memory.json")
 
 
 def load_memory(path: str = MEMORY_PATH) -> List[Dict]:

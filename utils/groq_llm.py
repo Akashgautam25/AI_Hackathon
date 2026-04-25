@@ -9,7 +9,7 @@ import time
 from dotenv import load_dotenv
 from groq import Groq
 
-load_dotenv()
+load_dotenv(override=True)
 
 # Streamlit Cloud: pull secrets into env if not already set
 try:
@@ -28,18 +28,21 @@ DEFAULT_MODEL = "llama-3.3-70b-versatile"
 FALLBACK_MODEL = "llama-3.1-8b-instant"
 
 _client: Groq | None = None
+_client_key: str = ""
 
 
 def _get_client() -> Groq:
-    global _client
-    if _client is None:
-        api_key = os.getenv("GROQ_API_KEY")
-        if not api_key:
-            raise ValueError(
-                "GROQ_API_KEY is not set. "
-                "Create a .env file with GROQ_API_KEY=your_key_here"
-            )
+    global _client, _client_key
+    api_key = os.getenv("GROQ_API_KEY", "")
+    if not api_key:
+        raise ValueError(
+            "GROQ_API_KEY is not set. "
+            "Create a .env file with GROQ_API_KEY=your_key_here"
+        )
+    # Re-create client if key has changed
+    if _client is None or _client_key != api_key:
         _client = Groq(api_key=api_key)
+        _client_key = api_key
     return _client
 
 

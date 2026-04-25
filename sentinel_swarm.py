@@ -128,7 +128,7 @@ def _run_hacker_on_file(
             continue
 
         try:
-            parsed = json.loads(_clean_json(raw), strict=False)
+            data = json.loads(_clean_json(raw), strict=False)
         except json.JSONDecodeError as exc:
             state["logs"].append(f"[Agent A - Hacker] ⚠️ JSON parse error on {file_path}: {exc}")
             logger.warning("JSON parse error for %s: %s | raw: %.200s", file_path, exc, raw)

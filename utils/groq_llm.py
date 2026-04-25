@@ -11,6 +11,16 @@ from groq import Groq
 
 load_dotenv()
 
+# Streamlit Cloud: pull secrets into env if not already set
+try:
+    import streamlit as _st
+    if "GROQ_API_KEY" in _st.secrets and not os.getenv("GROQ_API_KEY"):
+        os.environ["GROQ_API_KEY"] = _st.secrets["GROQ_API_KEY"]
+    if "GROQ_MODEL" in _st.secrets and not os.getenv("GROQ_MODEL"):
+        os.environ["GROQ_MODEL"] = _st.secrets["GROQ_MODEL"]
+except Exception:
+    pass
+
 logger = logging.getLogger(__name__)
 
 # Model can be overridden via env var — no need to touch source code.

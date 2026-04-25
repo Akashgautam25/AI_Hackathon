@@ -9,10 +9,13 @@ services:
     env_file:
       - .env
     volumes:
-      - ./memory.json:/app/memory.json
+      - sentinel_memory:/app/memory_data
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
       interval: 30s
       timeout: 10s
       retries: 3
+
+volumes:
+  sentinel_memory:

@@ -48,6 +48,7 @@ def call_llm(
     system_role: str = "You are a helpful assistant.",
     max_retries: int = 3,
     model: str | None = None,
+    max_tokens: int = 1024,
 ) -> str:
     """
     Call Groq LLM with exponential back-off on rate-limit / overload errors.
@@ -74,7 +75,7 @@ def call_llm(
                     ],
                     model=current_model,
                     temperature=0.2,
-                    max_tokens=4096,
+                    max_tokens=max_tokens,
                 )
                 return response.choices[0].message.content
 

@@ -10,7 +10,16 @@ import time
 from typing import Dict, List
 
 from dotenv import load_dotenv
-load_dotenv()  # must run before any os.getenv checks
+load_dotenv()  # local .env
+
+# On Streamlit Cloud, secrets are in st.secrets — sync them into os.environ
+try:
+    import streamlit as _st
+    for _k in ("GROQ_API_KEY", "GITHUB_TOKEN", "GROQ_MODEL"):
+        if _k in _st.secrets and not os.getenv(_k):
+            os.environ[_k] = _st.secrets[_k]
+except Exception:
+    pass
 
 import streamlit as st
 

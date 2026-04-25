@@ -906,7 +906,7 @@ if user_question:
     st.session_state["chat_history"] = chat_history
 
     with st.spinner("Agent thinking..."):
-        answer = call_llm(user_question, system_role=system_ctx)
+        answer = call_llm(user_question, system_role=system_ctx, max_tokens=2048)
 
     chat_history.append({"role": "assistant", "content": answer})
     st.session_state["chat_history"] = chat_history

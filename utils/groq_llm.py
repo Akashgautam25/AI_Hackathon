@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 # Model can be overridden via env var — no need to touch source code.
 DEFAULT_MODEL = "llama-3.3-70b-versatile"
-FALLBACK_MODEL = "llama3-70b-8192"
+FALLBACK_MODEL = "llama-3.1-8b-instant"
 
 _client: Groq | None = None
 
@@ -48,6 +48,7 @@ def call_llm(
     system_role: str = "You are a helpful assistant.",
     max_retries: int = 3,
     model: str | None = None,
+    max_tokens: int = 1024,
 ) -> str:
     """
     Call Groq LLM with exponential back-off on rate-limit / overload errors.
@@ -74,7 +75,7 @@ def call_llm(
                     ],
                     model=current_model,
                     temperature=0.2,
-                    max_tokens=4096,
+                    max_tokens=max_tokens,
                 )
                 return response.choices[0].message.content
 

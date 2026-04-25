@@ -22,8 +22,9 @@ from utils.memory import load_memory, save_memory, summarize_memory
 logger = logging.getLogger(__name__)
 
 MEMORY_MAX_RECORDS = 100
-MAX_FINDINGS       = 5      # cap to avoid runaway LLM costs / time
-CHUNK_SIZE         = 4000   # larger chunks → fewer hacker calls per file
+MAX_FINDINGS       = 3      # reduced from 5 to save tokens
+CHUNK_SIZE         = 3000   # reduced from 4000 to save tokens
+MAX_TOKENS_PER_CALL = 1024  # reduced from 4096
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────

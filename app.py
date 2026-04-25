@@ -368,9 +368,10 @@ def _update_phases_from_log(log_msg: str) -> None:
 
 
 def run_analysis(files_input: List[Dict[str, str]]) -> None:
-    st.session_state.logs   = []
-    st.session_state.result = None
-    st.session_state.phases = {k: "idle" for k in PHASE_LABELS}
+    st.session_state.logs        = []
+    st.session_state.result      = None
+    st.session_state.phases      = {k: "idle" for k in PHASE_LABELS}
+    st.session_state.chat_history = []  # reset chat for new analysis
 
     from sentinel_swarm import run_swarm
 
@@ -564,7 +565,7 @@ with st.expander("Full Vulnerability Report", expanded=True):
 # ── CVSS Scores per finding ────────────────────────────────────────────────────
 cvss_findings = [f for f in result.get("findings", []) if f.get("cvss_score", 0) > 0]
 if cvss_findings:
-    with st.expander("CVSS 3.1 Scores", expanded=False):
+    with st.expander("📊 CVSS 3.1 Scores", expanded=True):
         CVSS_COLORS = {
             "Critical": "#ef4444", "High": "#f97316",
             "Medium": "#eab308", "Low": "#4ade80", "None": "#64748b",

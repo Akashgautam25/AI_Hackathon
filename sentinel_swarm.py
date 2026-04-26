@@ -135,11 +135,17 @@ def _run_hacker_on_file(
             continue
 
         if data.get("vulnerability_found"):
+            severity = data.get("severity", "High")
+            cvss_vector = data.get("cvss_vector", "")
+            cvss_score, cvss_rating = _score_from_vector(cvss_vector, severity)
             finding: VulnerabilityFinding = {
                 "file_path": file_path,
                 "type": data.get("type", "Unknown"),
                 "explanation": data.get("explanation", ""),
-                "severity": data.get("severity", "High"),
+                "severity": severity,
+                "cvss_score": cvss_score,
+                "cvss_vector": cvss_vector,
+                "cvss_rating": cvss_rating,
                 "exploit_payload": data.get("exploit_payload", ""),
                 "exploit_script": "",
                 "exploit_vulnerable_result": "",

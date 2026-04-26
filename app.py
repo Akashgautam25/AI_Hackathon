@@ -436,11 +436,13 @@ def run_analysis(files_input: List[Dict[str, str]]) -> None:
 
         all_pass = all(f.get("validation") == "PASS" for f in findings)
 
-        # Risk score: highest severity drives the score
-        severity_scores = {"Critical": 95, "High": 75, "Medium": 50, "Low": 25}
-        risk = max(
-            severity_scores.get(f.get("severity", "Low"), 25) for f in findings
+        # Risk score: use highest CVSS score (0-10 scale → 0-100), fall back to severity map
+        severity_scores = {"Critical": 9.0, "High": 7.5, "Medium": 5.0, "Low": 2.5}
+        raw_risk = max(
+            f.get("cvss_score") or severity_scores.get(f.get("severity", "Low"), 2.5)
+            for f in findings
         )
+        risk = round(raw_risk * 10)  # convert 0-10 CVSS to 0-100
 
         # Use the first finding for the primary code/exploit display;
         # show a tab-style summary for multi-file repos in the report.

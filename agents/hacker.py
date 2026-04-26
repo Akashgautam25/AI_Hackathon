@@ -1,3 +1,4 @@
+
 """
 Hacker Agent — thinks like an attacker to find vulnerabilities.
 """
@@ -12,7 +13,8 @@ ERROR_PREFIX = "Error calling Groq API:"
 
 def _parse_risk_score(text: str) -> int:
     """Extract RISK_SCORE from LLM output. Defaults to 50, clamped to [0, 100]."""
-    match = re.search(r"RISK_SCORE\s*[:\-]?\s*(\d+)", text, re.IGNORECASE)
+    # Use a more specific and efficient regular expression pattern
+    match = re.search(r"RISK_SCORE\s*:\s*(\d+)", text, re.IGNORECASE)
     if match:
         score = int(match.group(1))
         return max(0, min(100, score))

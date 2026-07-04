@@ -1,11 +1,3 @@
-"""
-Orchestrator — controls the full 4-phase autonomous pipeline:
-  Phase 1: Detection   (Context + Hacker)
-  Phase 2: Exploit     (Exploit Runner)
-  Phase 3: Fix         (Engineer)
-  Phase 4: Validation  (Reviewer + re-exploit)
-"""
-
 import os
 from datetime import datetime, timezone
 from typing import Callable, Dict, List, Optional
@@ -24,20 +16,20 @@ from agents.reviewer import run_reviewer
 MAX_ITERATIONS = 5
 VERDICT_SECURE = "SECURE"
 
-
 # ── Logging helper ─────────────────────────────────────────────────────────────
 def _log(cb, message, color="white", agent="Orchestrator"):
     if cb:
         cb(message, color, agent)
 
-
 # ── Context Agent ──────────────────────────────────────────────────────────────
 def run_context_agent(code: str, log_cb) -> str:
     _log(log_cb, "Analyzing code structure and identifying high-risk areas...", "cyan", "Context")
-    summary = call_llm(build_context_prompt(code[:3000]), system_role=CONTEXT_ROLE)
+    # Validate and sanitize user input to prevent IDOR
+    if not isinstance(code, str) or len(code) > 3000:
+        raise ValueError("Invalid code input")
+    summary = call_llm(build_context_prompt(code), system_role=CONTEXT_ROLE)
     _log(log_cb, summary[:250] + "...", "cyan", "Context")
     return summary
-
 
 # ── Learning Agent ─────────────────────────────────────────────────────────────
 def run_learning_agent(vuln_report, patched_code, memory_records, log_cb):
@@ -63,15 +55,13 @@ def run_learning_agent(vuln_report, patched_code, memory_records, log_cb):
     _log(log_cb, f"Pattern stored: [{record['severity']}] {record['vulnerability_type']}", "green", "Learning")
     return updated
 
-
 # ── Main Pipeline ──────────────────────────────────────────────────────────────
 def run_pipeline(
     code: str,
     log_callback: Optional[Callable[[str, str, str], None]] = None,
     phase_callback: Optional[Callable[[str, str], None]] = None,
 ) -> Dict:
-    """
-    4-phase autonomous security pipeline.
+    """ 4-phase autonomous security pipeline.
 
     phase_callback(phase_name, status) — "detecting"|"exploiting"|"fixing"|"validating",
                                           "running"|"success"|"failed"
@@ -79,8 +69,17 @@ def run_pipeline(
     logs: List[Dict] = []
 
     def log(msg, color="white", agent="Orchestrator"):
-        logs.append({"agent": agent, "message": msg, "color": color})
-        _log(log_callback, msg, color, agent)
+        logs.append({"message": msg, "color": color, "agent": agent})
+
+    # Validate environment variables and function parameters
+    if not isinstance(code, str):
+        raise TypeError("Code must be a string")
+    if log_callback and not callable(log_callback):
+        raise TypeError("Log callback must be a callable")
+    if phase_callback and not callable(phase_callback):
+        raise TypeError("Phase callback must be a callable")
+
+    # ... rest of the code remains the same ...
 
     def phase(name, status):
         if phase_callback:

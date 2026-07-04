@@ -1,1 +1,30 @@
-[]
+[
+  {
+    "timestamp": "2026-04-26T04:21:02.934676+00:00",
+    "vulnerability_type": "Regular Expression Denial of Service (ReDoS)",
+    "severity": "Medium",
+    "pattern": "RISK_SCORE\\s*[:\\-]?\\s*(\\d+)",
+    "fix_strategy": "Use a more specific and efficient regular expression pattern to reduce the risk of ReDoS attacks"
+  },
+  {
+    "timestamp": "2026-04-26T04:21:02.934740+00:00",
+    "vulnerability_type": "Insecure Direct Object Reference (IDOR)",
+    "severity": "High",
+    "pattern": "Insecure Direct Object Reference (IDOR)",
+    "fix_strategy": "Input validation and sanitization"
+  },
+  {
+    "timestamp": "2026-04-26T04:35:20.641246+00:00",
+    "vulnerability_type": "Insecure Direct Object Reference (IDOR)",
+    "severity": "High",
+    "pattern": "Insecure Direct Object Reference (IDOR)",
+    "fix_strategy": "Input validation and sanitization"
+  },
+  {
+    "timestamp": "2026-04-26T04:35:20.641307+00:00",
+    "vulnerability_type": "Insecure Direct Object Reference (IDOR)",
+    "severity": "High",
+    "pattern": "Insecure Direct Object Reference (IDOR)",
+    "fix_strategy": "Input validation and sanitization"
+  }
+]
